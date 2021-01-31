@@ -1,44 +1,6 @@
-// import React from "react";
-// import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import PassportScreen from "./PassportScreen";
 import WelcomeScreen from "./WelcomeScreen";
 import TimelineScreen from "./TimelineScreen";
-
-// export default function App() {
-//   return (
-//     <Router>
-//       <div style={{ backgroundImage: `url(${../assets/bg.png})` }}>
-//         <nav>
-//           <ul>
-//             <li>
-//               <Link to='/'>Welcome</Link>
-//             </li>
-//             <li>
-//               <Link to='/timeline'>Timeline</Link>
-//             </li>
-//             <li>
-//               <Link to='/passport'>Passport</Link>
-//             </li>
-//           </ul>
-//         </nav>
-
-//         {/* A <Switch> looks through its children <Route>s and
-//             renders the first one that matches the current URL. */}
-//         <Switch>
-//           <Route path='/timeline'>
-//             <TimelineScreen />
-//           </Route>
-//           <Route path='/passport'>
-//             <PassportScreen />
-//           </Route>
-//           <Route path='/'>
-//             <WelcomeScreen />
-//           </Route>
-//         </Switch>
-//       </div>
-//     </Router>
-//   );
-// }
 import React from "react";
 import PropTypes from "prop-types";
 import AppBar from "@material-ui/core/AppBar";
@@ -102,6 +64,7 @@ function ResponsiveDrawer(props) {
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
+  
 
   const drawer = (
     <div>

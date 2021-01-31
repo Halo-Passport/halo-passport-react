@@ -1,0 +1,16 @@
+client/node_modules/**/*
+client/yarn.lock
+client/src/contracts/**
+npm-debug.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+web-build/
+.env
+.secret
+build/contracts/*
+# macOS
+.DS_Store

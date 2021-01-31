@@ -10,7 +10,7 @@ import {
 import { Button } from "@material-ui/core";
 
 class TimelineScreen extends Component {
-  state = { storageValue: 0, web3: null, accounts: null, contract: null ,events:null};
+  state = { storageValue: 0, web3: null, accounts: null, contract: null ,events:[]};
 
   componentDidMount = async () => {
     try {
@@ -59,12 +59,15 @@ class TimelineScreen extends Component {
       function(error,events){ 
         console.log(events); })
       .then(function(events){
-          console.log(events[events.length-1]) // same results as the optional callback above
-          return JSON.stringify(events[events.length-1])
+          console.log(events) // same results as the optional callback above
+          // return JSON.stringify(events)
+          return events
       }
     );
     // Update state with the result.
+
     this.setState({events:result });
+    // this.setState({events:[{1:"12"},{1:"12"}]})
   };
 
   refreshEvents = async()=>{
@@ -80,68 +83,42 @@ class TimelineScreen extends Component {
           return events
       }
     );
-    this.setState({event:result})
+    this.setState({events:result})
   }
-  
-
   render() {
     // if (!this.state.web3) {
     //   return <div>Loading Web3, accounts, and contract...</div>;
     // }
     return (
       <div className='App'>
-        <Button variant="contained" color="primary" onPress={this.refreshEvents}>Refresh</Button>
-        <p>{this.state.events}</p>
+        <Button onClick={()=>this.refreshEvents()} color="primary">Refresh</Button>
+        {/* {this.state.events.map(event => <p>{event.returnValues._testResult}</p>)} */}
+
         <VerticalTimeline>
+        {this.state.events.map(
+          event=>
           <VerticalTimelineElement
-            className='vertical-timeline-element--work'
-            contentStyle={{ background: "rgb(33, 150, 243)", color: "#fff" }}
-            contentArrowStyle={{ borderRight: "7px solid  rgb(33, 150, 243)" }}
-            date='2011 - present'
-            iconStyle={{ background: "rgb(33, 150, 243)", color: "#fff" }}
-          >
-            <h3 className='vertical-timeline-element-title'>
-              Creative Director
-            </h3>
-            <button onClick={this.refreshEvents}>Refresh</button>
-            <h4 className='vertical-timeline-element-subtitle'>Miami, FL</h4>
-            <p>
-              Creative Direction, User Experience, Visual Design, Project
-              Management, Team Leading
-            </p>
-          </VerticalTimelineElement>
-          <VerticalTimelineElement
-            className='vertical-timeline-element--work'
-            contentStyle={{ background: "rgb(33, 150, 243)", color: "#fff" }}
-            contentArrowStyle={{ borderRight: "7px solid  rgb(33, 150, 243)" }}
-            date='2011 - present'
-            iconStyle={{ background: "rgb(33, 150, 243)", color: "#fff" }}
-          >
-            <h3 className='vertical-timeline-element-title'>
-              Creative Director
-            </h3>
-            <h4 className='vertical-timeline-element-subtitle'>Miami, FL</h4>
-            <p>
-              Creative Direction, User Experience, Visual Design, Project
-              Management, Team Leading
-            </p>
-          </VerticalTimelineElement>
-          <VerticalTimelineElement
-            className='vertical-timeline-element--work'
-            contentStyle={{ background: "rgb(33, 150, 243)", color: "#fff" }}
-            contentArrowStyle={{ borderRight: "7px solid  rgb(33, 150, 243)" }}
-            date='2011 - present'
-            iconStyle={{ background: "rgb(33, 150, 243)", color: "#fff" }}
-          >
-            <h3 className='vertical-timeline-element-title'>
-              Creative Director
-            </h3>
-            <h4 className='vertical-timeline-element-subtitle'>Miami, FL</h4>
-            <p>
-              Creative Direction, User Experience, Visual Design, Project
-              Management, Team Leading
-            </p>
-          </VerticalTimelineElement>
+          className='vertical-timeline-element--work'
+          contentStyle={{ background: event.returnValues._testResult=='Positive Results'
+            ? "rgb(255, 51, 51)"
+            : "rgb(0, 204, 153)",
+          color: "#fff", }}
+          contentArrowStyle={{ borderRight: "7px solid  rgb(33, 150, 243)" }}
+          // date='2011 - present'
+          iconStyle={{ background: event.returnValues._testResult=='Positive Results'
+          ? "rgb(255, 51, 51)"
+          : "rgb(0, 204, 153)", color: "#fff" }}
+          
+        >
+          <h3 className='vertical-timeline-element-title' >
+            Test Results: <strong>{event.returnValues._testResult}</strong>
+          </h3>
+          <h4 className='vertical-timeline-element-subtitle'>Institution: {event.returnValues._EA}</h4>
+          <p>
+            My Address: {event.returnValues._PatientSC}
+          </p>
+        </VerticalTimelineElement>
+        )}
         </VerticalTimeline>
         {/* <div>The stored value is: {this.state.storageValue}</div> */}
       </div>

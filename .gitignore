@@ -1,5 +1,6 @@
 client/node_modules/**/*
 client/yarn.lock
+client/src/contracts/*
 npm-debug.*
 *.jks
 *.p8

@@ -76,12 +76,14 @@ class App extends Component {
       function(error,events){ 
         console.log(events); })
       .then(function(events){
-
+        //TODO modify this to set the state 
           console.log(events[events.length-1].returnValues) // same results as the optional callback above
           return JSON.stringify(events[events.length-1].returnValues)
       }
     );
     this.setState({  subEvent:result });
+    // TODO -> Changed the state of the component should update front
+    //end
   }
 
   render() {

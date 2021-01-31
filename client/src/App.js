@@ -1,79 +1,207 @@
-import React, { Component } from "react";
-import SimpleStorageContract from "./contracts/SimpleStorage.json";
-import TestingCenter from "./contracts/TestingCenter.json";
-import getWeb3 from "./getWeb3";
+// import React from "react";
+// import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import PassportScreen from "./PassportScreen";
+import WelcomeScreen from "./WelcomeScreen";
+import TimelineScreen from "./TimelineScreen";
 
-import "./App.css";
+// export default function App() {
+//   return (
+//     <Router>
+//       <div style={{ backgroundImage: `url(${../assets/bg.png})` }}>
+//         <nav>
+//           <ul>
+//             <li>
+//               <Link to='/'>Welcome</Link>
+//             </li>
+//             <li>
+//               <Link to='/timeline'>Timeline</Link>
+//             </li>
+//             <li>
+//               <Link to='/passport'>Passport</Link>
+//             </li>
+//           </ul>
+//         </nav>
 
-class App extends Component {
-  state = { storageValue: 0, web3: null, accounts: null, contract: null };
+//         {/* A <Switch> looks through its children <Route>s and
+//             renders the first one that matches the current URL. */}
+//         <Switch>
+//           <Route path='/timeline'>
+//             <TimelineScreen />
+//           </Route>
+//           <Route path='/passport'>
+//             <PassportScreen />
+//           </Route>
+//           <Route path='/'>
+//             <WelcomeScreen />
+//           </Route>
+//         </Switch>
+//       </div>
+//     </Router>
+//   );
+// }
+import React from "react";
+import PropTypes from "prop-types";
+import AppBar from "@material-ui/core/AppBar";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import Divider from "@material-ui/core/Divider";
+import Drawer from "@material-ui/core/Drawer";
+import Hidden from "@material-ui/core/Hidden";
+import IconButton from "@material-ui/core/IconButton";
+import InboxIcon from "@material-ui/icons/MoveToInbox";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
+import MailIcon from "@material-ui/icons/Mail";
+import MenuIcon from "@material-ui/icons/Menu";
+import Toolbar from "@material-ui/core/Toolbar";
+import Typography from "@material-ui/core/Typography";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
+import { Switch, Route, Link, BrowserRouter } from "react-router-dom";
 
-  componentDidMount = async () => {
-    try {
-      // Get network provider and web3 instance.
-      const web3 = await getWeb3();
+const drawerWidth = 240;
 
-      // Use web3 to get the user's accounts.
-      const accounts = await web3.eth.getAccounts();
+const useStyles = makeStyles((theme) => ({
+  root: {
+    display: "flex",
+  },
+  drawer: {
+    [theme.breakpoints.up("sm")]: {
+      width: drawerWidth,
+      flexShrink: 0,
+    },
+  },
+  appBar: {
+    marginLeft: drawerWidth,
+    [theme.breakpoints.up("sm")]: {
+      width: `calc(100% - ${drawerWidth}px)`,
+    },
+  },
+  menuButton: {
+    marginRight: theme.spacing(2),
+    [theme.breakpoints.up("sm")]: {
+      display: "none",
+    },
+  },
+  toolbar: theme.mixins.toolbar,
+  drawerPaper: {
+    width: drawerWidth,
+  },
+  content: {
+    flexGrow: 1,
+    padding: theme.spacing(3),
+  },
+}));
 
-      // Get the contract instance.
-      const networkId = await web3.eth.net.getId();
-      // const deployedNetwork = SimpleStorageContract.networks[networkId];
-      // const instance = new web3.eth.Contract(
-      //   SimpleStorageContract.abi,
-      //   deployedNetwork && deployedNetwork.address,
-      // );
-      const deployedNetwork = TestingCenter.networks[networkId];
-      const instance = new web3.eth.Contract(
-        TestingCenter.abi, 
-        deployedNetwork && deployedNetwork.address,
-      )
+function ResponsiveDrawer(props) {
+  const { container } = props;
+  const classes = useStyles();
+  const theme = useTheme();
+  const [mobileOpen, setMobileOpen] = React.useState(false);
 
-      // Set web3, accounts, and contract to the state, and then proceed with an
-      // example of interacting with the contract's methods.
-      this.setState({ web3, accounts, contract: instance }, this.runExample);
-    } catch (error) {
-      // Catch any errors for any of the above operations.
-      alert(
-        `Failed to load web3, accounts, or contract. Check console for details.`,
-      );
-      console.error(error);
-    }
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
   };
 
-  runExample = async () => {
-    const { accounts, contract } = this.state;
+  const drawer = (
+    <div>
+      <div className={classes.toolbar} />
+      <Divider />
+      <List>
+        {["Welcome", "Timeline", "Passport"].map((text, index) => (
+          <ListItem
+            key={text}
+            component={Link}
+            to={"/" + text}
+            style={{ alignContent: "center" }}
+          >
+            <ListItemText primary={text} />
+          </ListItem>
+        ))}
+      </List>
+    </div>
+  );
 
-    // Stores a given value, 5 by default.
-    // await contract.methods.set(10).send({ from: accounts[0] });
+  return (
+    <div className={classes.root}>
+      <CssBaseline />
+      <AppBar position='fixed' className={classes.appBar}>
+        <Toolbar>
+          <IconButton
+            color='inherit'
+            aria-label='open drawer'
+            edge='start'
+            onClick={handleDrawerToggle}
+            className={classes.menuButton}
+          >
+            <MenuIcon />
+          </IconButton>
+          <Typography variant='h6' noWrap>
+            Halo Passport
+          </Typography>
+        </Toolbar>
+      </AppBar>
+      <BrowserRouter>
+        <nav className={classes.drawer} aria-label='mailbox folders'>
+          {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
+          <Hidden smUp implementation='css'>
+            <Drawer
+              container={container}
+              variant='temporary'
+              anchor={theme.direction === "rtl" ? "right" : "left"}
+              open={mobileOpen}
+              onClose={handleDrawerToggle}
+              classes={{
+                paper: classes.drawerPaper,
+              }}
+              ModalProps={{
+                keepMounted: true, // Better open performance on mobile.
+              }}
+            >
+              {drawer}
+            </Drawer>
+          </Hidden>
+          <Hidden xsDown implementation='css'>
+            <Drawer
+              classes={{
+                paper: classes.drawerPaper,
+              }}
+              variant='permanent'
+              open
+            >
+              {drawer}
+            </Drawer>
+          </Hidden>
+        </nav>
 
-    // Get the value from the contract to prove it worked.
-    const response = await contract.methods.name().call();
+        <main className={classes.content}>
+          <div className={classes.toolbar} />
 
-    // Update state with the result.
-    this.setState({ storageValue: response });
-  };
-
-  render() {
-    if (!this.state.web3) {
-      return <div>Loading Web3, accounts, and contract...</div>;
-    }
-    return (
-      <div className="App">
-        <h1>Good to Go!</h1>
-        <p>Your Truffle Box is installed and ready.</p>
-        <h2>Smart Contract Example</h2>
-        <p>
-          If your contracts compiled and migrated successfully, below will show
-          a stored value of 5 (by default).
-        </p>
-        <p>
-          Try changing the value stored on <strong>line 40</strong> of App.js.
-        </p>
-        <div>The stored value is: {this.state.storageValue}</div>
-      </div>
-    );
-  }
+          <Switch>
+            <Route path='/welcome'>
+              <WelcomeScreen />
+            </Route>
+            <Route path='/timeline'>
+              <TimelineScreen />
+            </Route>
+            <Route path='/passport'>
+              <PassportScreen />
+            </Route>
+          </Switch>
+        </main>
+      </BrowserRouter>
+    </div>
+  );
 }
 
-export default App;
+ResponsiveDrawer.propTypes = {
+  /**
+   * Injected by the documentation to work in an iframe.
+   * You won't need it on your project.
+   */
+  container: PropTypes.instanceOf(
+    typeof Element === "undefined" ? Object : Element
+  ),
+};
+
+export default ResponsiveDrawer;
